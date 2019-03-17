@@ -19,23 +19,42 @@ import javax.swing.JPanel;
 
 public class Game implements Runnable, ImageObserver{
    
-	final int WIDTH = 1500;
-	final int HEIGHT = 700;
+	final int WIDTH = 1920;
+	final int HEIGHT = 1080;
    
 	JFrame frame;
 	Canvas canvas;
 	BufferStrategy bufferStrategy;
 	
-	private double x = -5000;
 	private double timer = 0;
-	private boolean room0 = false, room1 = false;
+	private Room rooms[];
 	private int wood = 15;
 	private int stone = 15;
+	private int food = 0;
+	private int people = 0;
+	private int gold = 0;
 	private int hp = 100;
-	private BufferedImage image;
+	private BufferedImage background;
+	private BufferedImage goblin;
+	private boolean night = false;
    
-	public Game(){
-		frame = new JFrame("Basic Game");
+	public Game() {
+		
+		try {
+			background = ImageIO.read(new File(System.getProperty("user.dir") + "\\assets\\" + "conceptBg" + ".jpg"));
+			goblin = ImageIO.read(new File(System.getProperty("user.dir") + "\\assets\\" + "Gob1" + ".png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		rooms = new Room[12];
+		
+		for (int i=0;i<12;i++)
+		{
+			rooms[i] = null;
+		}
+		
+		frame = new JFrame(" ");
       
 		JPanel panel = (JPanel) frame.getContentPane();
 		panel.setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -65,6 +84,11 @@ private class MouseControl extends MouseAdapter{
 	
 	public void mouseClicked(MouseEvent e) {
 		
+		int x = e.getX();
+		int y = e.getY();
+		
+		System.out.println(x + ", " + y);
+		
 		if (e.getX() >= 1052 && e.getX() <= 1209)
 		{
 			if (e.getY() >= 356 && e.getY() <= 387)
@@ -73,7 +97,7 @@ private class MouseControl extends MouseAdapter{
 				{
 					wood -= 10;
 					stone -= 10;
-					room0 = true;
+					
 				}
 			}
 			else if (e.getY() >=402 && e.getY() <= 438)
@@ -82,7 +106,7 @@ private class MouseControl extends MouseAdapter{
 				{
 					wood -= 10;
 					stone -= 10;
-					room1 = true;
+					
 				}
 			}
 		}
@@ -108,12 +132,7 @@ private class MouseControl extends MouseAdapter{
       	while(running){
       		beginLoopTime = System.nanoTime();
          
-      		try {
-      			render();
-      		} catch (IOException e1) {
-      			// TODO Auto-generated catch block
-      			e1.printStackTrace();
-      		}
+      		render();
          
       		lastUpdateTime = currentUpdateTime;
       		currentUpdateTime = System.nanoTime();
@@ -123,7 +142,7 @@ private class MouseControl extends MouseAdapter{
       		deltaLoop = endLoopTime - beginLoopTime;
            
       		if(deltaLoop > desiredDeltaLoop){
-      			//Do nothing. We are already late.
+      			//Do nothing
       		}else{
       			try{
       				Thread.sleep((desiredDeltaLoop - deltaLoop)/(1000*1000));
@@ -134,7 +153,7 @@ private class MouseControl extends MouseAdapter{
       	}
 	}
    
-	private void render() throws IOException {
+	private void render() {
 		Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
 		g.clearRect(0, 0, WIDTH, HEIGHT);
 		render(g);
@@ -145,39 +164,27 @@ private class MouseControl extends MouseAdapter{
    
 	protected void update(int deltaTime){
 		
-		x += deltaTime * 0.2;
-		timer ++;
+		timer += (deltaTime/4);
 		
-		if (timer > 100)
+		if (timer >= 1000)
 		{
-			timer = 0;
+			for (int i=0;i<12;i++)
+			{
+				if (rooms[i] != null)
+				{
+					//update the rooms
+				}
+			}
 			
-			if (room0)
-			{
-				wood++;
-				stone++;
-			}
-			if (room1)
-			{
-				wood++;
-				stone++;
-			}
-		}
-		
-		if(x > 550){
-			x = -450;
-			hp -= 5;
+			timer -= 1000;
 		}
 	}
    
    
-	protected void render(Graphics2D g) throws IOException{
-		String loc = System.getProperty("user.dir") + "\\" + "conceptBg" + ".jpg";
-		image = ImageIO.read(new File(loc));
+	protected void render(Graphics2D g){
 		
-		g.drawImage(image, 0, 0, WIDTH, HEIGHT, null);
-		g.setColor(Color.RED);
-		g.fillRect((int)x, 550, 50, 50);
+		g.drawImage(background, 0, 0, WIDTH, HEIGHT, null);
+		g.drawImage(goblin, 100, 550, 64, 64, null);
 		g.drawString("Health: " + hp, 25, 75);
 		g.drawString("Wood: " + wood, 25, 100);
 		g.drawString("Stone: " + stone, 25, 125);
@@ -188,7 +195,6 @@ private class MouseControl extends MouseAdapter{
 
 	@Override
 	public boolean imageUpdate(Image arg0, int arg1, int arg2, int arg3, int arg4, int arg5) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
