@@ -1,11 +1,12 @@
 
 public class Main {
+	
 
-	public static void main(String [] args){
+	public static void main(String [] args)
+	{
 		
-		Game ex = new Game();
-		new Thread(ex).start();
-		
+		Menu menu = new Menu();
+		new Thread(menu).start();
 		
 	}
 
