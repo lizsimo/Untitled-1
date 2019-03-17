@@ -1,8 +1,7 @@
 Thank you for your interest in the Minimum Viable Product prototype of "", the newest game concept from Games Without Names Studio! This document will outline everything you need to 
 install and run the MVP executable.
 
-Downloading Instructions: If you're reading this, it means that you have successfully installed and unzipped the file folder. Congradualtions! If this is not true, please contact me at
-yetterm@sunypoly.edu, as I am curious how you managed to open this file. 
+Downloading Instructions: If you're reading this, it means that you have successfully installed and unzipped the file folder. Congradualtions!
 
 Installation Notes: Inside the unzipped COM419MVP folder, there are three files. The first file, MVP1.jar, is the game executable. The second file is conceptBg.jpg. For the game to
 run correctly, conceptBg.jpg and MVP1.jar must be in the same folder and neither can be renamed. Also, to run the MVP1.jar file, your machine must have the Java Development Kit (JDK)
