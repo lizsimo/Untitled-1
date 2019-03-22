@@ -1,5 +1,4 @@
 import java.awt.Canvas;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -21,12 +20,13 @@ public class Menu implements Runnable, ImageObserver{
 	final int WIDTH = 800;
 	final int HEIGHT = 500;
 	
-	private int difficulty = 0;
 	private String screen = "main";
 	private BufferedImage main;
-	private BufferedImage settings;
-	private BufferedImage howTo;
+	//private BufferedImage settings;
+	private BufferedImage howTo [];
+	private int howToNum = 0;
 	private BufferedImage credits;
+	//private PlaySound menuSong;
    
 	JFrame frame;
 	Canvas canvas;
@@ -36,14 +36,22 @@ public class Menu implements Runnable, ImageObserver{
 	public Menu() 
 	{
 		
+		howTo = new BufferedImage [6];
+		
 		try {
 			main = ImageIO.read(new File(System.getProperty("user.dir") + "\\assets\\" + "main" + ".png"));
 			//settings = ImageIO.read(new File(System.getProperty("user.dir") + "\\assets\\" + "settings" + ".png"));
-			howTo = ImageIO.read(new File(System.getProperty("user.dir") + "\\assets\\" + "howTo" + ".png"));
+			for (howToNum=0;howToNum<6;howToNum++)
+			{
+				howTo[howToNum] = ImageIO.read(new File(System.getProperty("user.dir") + "\\assets\\" + "HTP" + howToNum + ".png"));
+			}
 			credits = ImageIO.read(new File(System.getProperty("user.dir") + "\\assets\\" + "credits" + ".png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		//menuSong = new PlaySound ("song");
+		//menuSong.play();
 		
 		frame = new JFrame("Game Launcher");
       
@@ -86,9 +94,12 @@ private class MouseControl extends MouseAdapter{
 			{
 				Game game = new Game ();
 				new Thread(game).start();
+				//menuSong.stop();
+				
 			}
 			else if (x>444 && x<677 && y>227 && y<319)
 			{
+				howToNum = 0;
 				screen = "howTo";
 			}
 			else if (x>182 && x<302 && y> 374 && y<414)
@@ -98,6 +109,15 @@ private class MouseControl extends MouseAdapter{
 			else if (x>502 && x<623 && y>373 && y< 415)
 			{
 				screen = "credits";
+			}
+		}
+		else if (screen == "howTo")
+		{
+			howToNum++;
+			
+			if (howToNum == 6)
+			{
+				screen = "main";
 			}
 		}
 		else
@@ -125,8 +145,8 @@ private class MouseControl extends MouseAdapter{
       
       	while(running){
       		beginLoopTime = System.nanoTime();
-         
-      		render();
+      		
+      		render ();
          
       		lastUpdateTime = currentUpdateTime;
       		currentUpdateTime = System.nanoTime();
@@ -136,7 +156,7 @@ private class MouseControl extends MouseAdapter{
       		deltaLoop = endLoopTime - beginLoopTime;
            
       		if(deltaLoop > desiredDeltaLoop){
-      			//Do nothing. We are already late.
+      			//Do nothing
       		}else{
       			try{
       				Thread.sleep((desiredDeltaLoop - deltaLoop)/(1000*1000));
@@ -177,7 +197,7 @@ private class MouseControl extends MouseAdapter{
 		}
 		else if (screen == "howTo")
 		{
-			g.drawImage(howTo, 0, 0, WIDTH, HEIGHT, null);
+			g.drawImage(howTo[howToNum], 0, 0, WIDTH, HEIGHT, null);
 		}
 		else if (screen == "credits")
 		{
@@ -191,7 +211,6 @@ private class MouseControl extends MouseAdapter{
 
 	@Override
 	public boolean imageUpdate(Image arg0, int arg1, int arg2, int arg3, int arg4, int arg5) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
