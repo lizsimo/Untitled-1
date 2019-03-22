@@ -2,11 +2,12 @@
 public class Room {
 	
 	private String name;
-	private int level = 0;
+	private boolean worked;
 	private int wood = 0;
 	private int stone = 0;
 	private int food = 0;
 	private int people = 0;
+	private int workingPop = 0;
 	private int gold = 0;
 	
 	
@@ -16,35 +17,35 @@ public class Room {
 		
 		name = input;
 		
-		if (name == "Throne")
+		if (name == "throne")
 		{
 			wood = 1;
 			stone = 1;
 		}
-		else if (name == "Barracks")
+		else if (name == "barracks")
 		{
-			people = 5;
+			people = 15;
+			workingPop = 5;
 		}
 		else if (name == "mine")
 		{
-			stone = 5;
-			gold = 1;
+			stone = 2;
+			gold = 2;
+			workingPop = 8;
 		}
-		else if (name == "kitchen")
+		else if (name == "farm")
 		{
 			food = 5;
+			workingPop = 5;
 		}
 		else if (name == "mill")
 		{
 			wood = 5;
+			workingPop = 10;
 		}
 		else if (name == "armory")
 		{
-			
-		}
-		else if (name == "blacksmith")
-		{
-			
+			workingPop = 3;
 		}
 		
 	}
@@ -58,31 +59,58 @@ public class Room {
 	
 	public int getWood ()
 	{
-		return wood;
+		if (worked)
+			return wood;
+		else
+			return 0;
 	}
 	
 	
 	public int getStone ()
 	{
-		return stone;
+		if (worked)
+			return stone;
+		else
+			return 0;
 	}
 	
 	
 	public int getFood ()
 	{
-		return food;
+		if (worked)
+			return food;
+		else
+			return 0;
 	}
 	
 	
 	public int getPeople ()
 	{
-		return people;
+		if (worked)
+			return people;
+		else
+			return 0;
 	}
 	
 	
 	public int getGold ()
 	{
-		return gold;
+		if (worked)
+			return gold;
+		else
+			return 0;
+	}
+	
+	
+	public int getWorkers ()
+	{
+		return workingPop;
+	}
+	
+	
+	public void isWorked (boolean wrk)
+	{
+		worked = wrk;
 	}
 	
 	
