@@ -24,7 +24,7 @@ public class Monster {
 		xVal = -100;
                    
 		try {
-			sprite = ImageIO.read(new File(System.getProperty("user.dir") + "\\assets\\" + name + ".png"));
+			sprite = ImageIO.read(new File("src/main/resources/" + name + ".png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -41,7 +41,7 @@ public class Monster {
 		xVal = -100;
                     
 		try {
-			sprite = ImageIO.read(new File(System.getProperty("user.dir") + "\\assets\\" + name + ".png"));
+			sprite = ImageIO.read(new File("src/main/resources/" + name + ".png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

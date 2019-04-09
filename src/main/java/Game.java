@@ -1,6 +1,7 @@
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
@@ -61,7 +62,7 @@ public class Game implements Runnable, ImageObserver{
 	{
 		//setting variables
 		try {
-			background = ImageIO.read(new File("src/main/resources/conceptBg.jpg"));
+			background = ImageIO.read(new File("src/main/resources/Flattened Bg.PNG"));
 			build = ImageIO.read(new File ("src/main/resources/Build.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -131,58 +132,42 @@ private class MouseControl extends MouseAdapter
 		
 		if (selectedRoom == -1)
 		{
-			if (x > 1340 && x < 1545)//left column
+			if (x > 1291 && x < 1520)//left column
 			{
-				if (y > 545 && y < 605)//first row
+				if (y > 477 && y < 565)//first row
 				{
 					selectedRoom = 0;
 				}
-				else if (y > 618 && y < 678)//second row
+				else if (y > 590 && y < 683)//second row
 				{
 					selectedRoom = 2;
 				}
-				else if (y > 698 && y < 755)//third row
+				else if (y > 710 && y < 799)//third row
 				{
 					selectedRoom = 4;
 				}
-				else if (y > 774 && y < 830)//fourth row
+				else if (y > 830 && y < 918)//fourth row
 				{
 					selectedRoom = 6;
-				}
-				else if (y > 851 && y < 909)//fifth row
-				{
-					selectedRoom = 8;
-				}
-				else if(y > 923 && y < 982)//sixth row
-				{
-					selectedRoom = 10;
 				}
 			}
 			else if  (x > 1575 && x < 1780)//right column
 			{
-				if (y > 545 && y < 605)//first row
+				if (y > 477 && y < 565)//first row
 				{
 					selectedRoom = 1;
 				}
-				else if (y > 618 && y < 678)//second row
+				else if (y > 590 && y < 683)//second row
 				{
 					selectedRoom = 3;
 				}
-				else if (y > 698 && y < 755)//third row
+				else if (y > 710 && y < 799)//third row
 				{
 					selectedRoom = 5;
 				}
-				else if (y > 774 && y < 830)//fourth row
+				else if (y > 830 && y < 918)//fourth row
 				{
 					selectedRoom = 7;
-				}
-				else if (y > 851 && y < 909)//fifth row
-				{
-					selectedRoom = 9;
-				}
-				else if(y > 923 && y < 982)//sixth row
-				{
-					selectedRoom = 11;
 				}
 			}
 		}
@@ -446,7 +431,8 @@ private class MouseControl extends MouseAdapter
 			}
 		}
 		
-		g.setColor(Color.RED);
+		g.setColor(Color.BLACK);
+		g.setFont(new Font("TimesRoman", Font.PLAIN, 20));
 		
 		if (night)
 		{
