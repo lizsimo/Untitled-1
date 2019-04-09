@@ -18,7 +18,7 @@ mvn clean install
 ### Run the game
 From the root directory run the game with
 ```
-java -jar target\game-1.0-SNAPSHOT-jar-with-dependencies.jar
+java -jar target/Untitled-1.0-SNAPSHOT-jar-with-dependencies.jar 
 ```
 
 Downloading Instructions: If you're reading this, it means that you have successfully installed and unzipped the file folder. Congradualtions!
