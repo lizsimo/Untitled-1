@@ -18,9 +18,10 @@ mvn clean install
 ### Run the game
 From the root directory run the game with
 ```
-java -jar target/Untitled-1.0-SNAPSHOT-jar-with-dependencies.jar 
+java -jar target\game-1.0-SNAPSHOT-jar-with-dependencies.jar
 ```
 
+## Misc stuff
 Downloading Instructions: If you're reading this, it means that you have successfully installed and unzipped the file folder. Congradualtions!
 
 Installation Notes: Inside the unzipped COM419MVP folder, there are three files. The first file, MVP1.jar, is the game executable. The second file is conceptBg.jpg. For the game to
