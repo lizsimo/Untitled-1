@@ -13,7 +13,7 @@ public class Defense {
 	{
 		numArchers = 0;
 		archerDamage = 1;
-		numKnights = 1;
+		numKnights = 5;
 		knightHealth = 10;
 		knightDamage = 5;
 		temp = 0;

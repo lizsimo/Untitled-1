@@ -52,7 +52,7 @@ public class Monster {
 		if (status == "move")
 		{
 			xVal  += speed;
-			if (xVal >= 723)
+			if (xVal >= 500)
 			{
 				status = "attack";
 			}

@@ -17,12 +17,15 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import java.util.Map;
+import java.util.HashMap;
+
 
 public class Game implements Runnable, ImageObserver{
    
 	//screen stuff
-	final int WIDTH = 1920;
-	final int HEIGHT = 1080;
+	final int WIDTH = 1280;
+	final int HEIGHT = 720;
 	JFrame frame;
 	Canvas canvas;
 	BufferStrategy bufferStrategy;
@@ -33,6 +36,9 @@ public class Game implements Runnable, ImageObserver{
 	//assets
 	private BufferedImage background;
 	private BufferedImage build;
+	private BufferedImage gameOverImg;
+	private final int buildMenuWidth = WIDTH / 2;
+	private final int buildMenuHeight = HEIGHT / 2;
 	
 	//time
 	private double timer = 0;
@@ -54,7 +60,47 @@ public class Game implements Runnable, ImageObserver{
 	private int worked = 20;
 	private int people = 20;
 	private int gold = 0;
+	private int silver = 0;
 	private int hp = 100;
+
+	// Left, Top, Right, Bottom
+	private int[][] selectorPositions = new int[][] {
+		{859, 	317, 	1012, 	378},
+		{1027, 	317, 	1179, 	378},
+		{859,	395,	1012,	455},
+		{1027,	395,	1179,	455},
+		{859,	475,	1012,	533},
+		{1027,	475,	1179,	533},
+		{859,	551,	1012,	611},
+		{1027,	551,	1179,	611}
+	};
+
+	private int[][] buildMenuSelectorPositions = new int[][] {
+		{579,	292,	657,	317},
+		{856,	304,	934,	326},
+		{579, 	357,	657,	381},
+		{856,	375,	934,	397},
+		{579, 	415,	657,	438},
+		{856,	437,	934,	462},
+	};
+	private final String[] buildNames = new String[]{
+		"throne",
+		"mines",
+		"barracks",
+		"mill",
+		"armory",
+		"farm"
+	};
+	private final Map<String, BuildRequirement> buildReqs = new HashMap<String, BuildRequirement>() {
+		{
+			put("throne", new BuildRequirement(15, 15, 0, 0, 0));
+			put("mines", new BuildRequirement(0, 0, 5, 0, 0));
+			put("barracks", new BuildRequirement(10, 10, 5, 0, 0));
+			put("mill", new BuildRequirement(0, 0, 10, 0, 0));
+			put("armory", new BuildRequirement(75, 100, 3, 0, 0));
+			put("farm", new BuildRequirement(0, 0, 5, 0, 0));
+		}
+	};
 	
    
 	
@@ -64,6 +110,7 @@ public class Game implements Runnable, ImageObserver{
 		try {
 			background = ImageIO.read(new File("src/main/resources/Flattened Bg.PNG"));
 			build = ImageIO.read(new File ("src/main/resources/Build.jpg"));
+			gameOverImg = ImageIO.read(new File("src/main/resources/GameOverImg.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -99,7 +146,7 @@ public class Game implements Runnable, ImageObserver{
       
 		panel.add(canvas);
       
-		canvas.addMouseListener(new MouseControl());
+		canvas.addMouseListener(new MouseController());
       
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
@@ -113,146 +160,67 @@ public class Game implements Runnable, ImageObserver{
 	}
    
         
-//reading clicks. Change in the game from clicking goes here
-private class MouseControl extends MouseAdapter
-{ 
-	
-	
-	public void mouseClicked(MouseEvent e) {
+	//reading clicks. Change in the game from clicking goes here
+	public class MouseController extends MouseAdapter
+	{ 
 		
-		int x = e.getX();
-		int y = e.getY();
 		
-		System.out.println(x + ", " + y);
-		
-		if (gameover)
-		{
-			running = false;
-		}
-		
-		if (selectedRoom == -1)
-		{
-			if (x > 1291 && x < 1520)//left column
+		public void mouseClicked(MouseEvent e) {
+			
+			int x = e.getX();
+			int y = e.getY();
+			
+			System.out.println(x + ", " + y);
+			
+			if (gameover)
 			{
-				if (y > 477 && y < 565)//first row
-				{
-					selectedRoom = 0;
-				}
-				else if (y > 590 && y < 683)//second row
-				{
-					selectedRoom = 2;
-				}
-				else if (y > 710 && y < 799)//third row
-				{
-					selectedRoom = 4;
-				}
-				else if (y > 830 && y < 918)//fourth row
-				{
-					selectedRoom = 6;
-				}
+				running = false;
 			}
-			else if  (x > 1575 && x < 1780)//right column
+			
+			if (selectedRoom == -1)
 			{
-				if (y > 477 && y < 565)//first row
-				{
-					selectedRoom = 1;
-				}
-				else if (y > 590 && y < 683)//second row
-				{
-					selectedRoom = 3;
-				}
-				else if (y > 710 && y < 799)//third row
-				{
-					selectedRoom = 5;
-				}
-				else if (y > 830 && y < 918)//fourth row
-				{
-					selectedRoom = 7;
-				}
-			}
-		}
-		else
-		{
-			if (x > 1637 && x < 1690 && y > 554 && y < 594)
-			{
-				selectedRoom = -1;
-			}
-			else if (x > 1262 && x < 1358 && y > 695 && y < 732)
-			{
-				if (rooms[selectedRoom] == null)
-				{
-					if (wood >= 15 && stone >= 15)
-					{
-						wood -= 15;
-						stone -= 15;
-						makeRoom ("throne");
-						selectedRoom = -1;
+				for (int i = 0; i < selectorPositions.length; i++) {
+					if (x > selectorPositions[i][0] && x < selectorPositions[i][2] && y > selectorPositions[i][1] && y < selectorPositions[i][3]) {
+						selectedRoom = i;
 					}
 				}
 			}
-			else if (x > 1586 && x < 1682 && y > 710 && y < 751)
+			else
 			{
-				if (rooms[selectedRoom] == null)
-				{
-					makeRoom ("mine");
-					selectedRoom = -1;
-				}
-			}
-			else if (x > 1262 && x < 1358 && y > 782 && y < 820)
-			{
-				if (rooms[selectedRoom] == null)
-				{
-					makeRoom ("barracks");
-					selectedRoom = -1;
-				}
-			}
-			else if (x > 1588 && x < 1681 && y > 808 && y < 845)
-			{
-				if (rooms[selectedRoom] == null)
-				{
-					if (wood >= 10 && stone >= 10)
-					{
-						wood -= 10;
-						stone -= 10;
-						makeRoom ("armory");
-						selectedRoom = -1;
+				int buildOption = -1;
+				for (int i = 0; i < buildMenuSelectorPositions.length; i++) {
+					if (x > buildMenuSelectorPositions[i][0] && x < buildMenuSelectorPositions[i][2] && y > buildMenuSelectorPositions[i][1] && y < buildMenuSelectorPositions[i][3]) {
+						buildOption = i;
 					}
 				}
-				makeRoom ("mill");
-				selectedRoom = -1;
-			}
-			else if (x > 1263 && x < 1357 && y > 864 && y < 901)
-			{
-				if (rooms[selectedRoom] == null)
-				{
-					if (wood >= 75 && stone >= 100)
-					{
-						wood -= 75;
-						stone -= 100;
-						makeRoom ("armory");
-						selectedRoom = -1;
+				if (buildOption == -1) {
+					selectedRoom = -1;
+				} else {
+					String buildName = buildNames[buildOption];
+					BuildRequirement req = buildReqs.get(buildName);
+					if (req.getWood() > wood) {
+						System.out.println("You don't have enough wood");
+					} else if (req.getStone() > stone) {
+						System.out.println("You don't have enough stone");
+					} else if (req.getPeasants() > people) {
+						System.out.println("You don't have enough people");
+					} else if (req.getSilver() > silver) {
+						System.out.println("You don't have enough silver");
+					} else if (req.getGold() > gold) {
+						System.out.println("You don't have enough gold");
+					} else {
+						wood -= req.getWood();
+						stone -= req.getStone();
+						people -= req.getPeasants();
+						silver -= req.getSilver();
+						gold -= req.getGold();
+						makeRoom(buildName);
 					}
 				}
 			}
-			else if (x > 1587 && x < 1682 && y > 897 && y < 933)
-			{
-				if (rooms[selectedRoom] == null)
-				{
-					makeRoom ("farm");
-					selectedRoom = -1;
-				}
-			}
-			else if (x > 1268 && x < 1398 && y > 981 && y < 1020)
-			{
-				makeRoom ("");
-				selectedRoom = -1;
-			}
+		
 		}
-	
 	}
-	
-	
-}
    
 	//fps and image updating
 	long desiredFPS = 60;
@@ -418,6 +386,10 @@ private class MouseControl extends MouseAdapter
    
 	//draws images to the screen. Any changes that affect the screen go here.
 	protected void render(Graphics2D g){
+		if (hp <= 0) {
+			g.drawImage(gameOverImg, 0, 0, WIDTH, HEIGHT, null);
+			return;
+		}
 		
 		boolean temp;
 		
@@ -427,7 +399,7 @@ private class MouseControl extends MouseAdapter
 		{
 			if (monsters[i] != null)
 			{
-				g.drawImage(monsters[i].getSprite(), monsters[i].getX(), 881, 64, 64, null);
+				g.drawImage(monsters[i].getSprite(), monsters[i].getX(), 500, 64, 64, null);
 			}
 		}
 		
@@ -453,7 +425,7 @@ private class MouseControl extends MouseAdapter
 		g.drawString("Peasants: " + (people-worked) + "/" + people, 900, 75);
 		
 		if (selectedRoom != -1)
-			g.drawImage(build, (WIDTH/2), (HEIGHT/2), 750, 500, null);
+			g.drawImage(build, ((WIDTH - buildMenuWidth)/2), ((HEIGHT- buildMenuHeight)/2), buildMenuWidth, buildMenuHeight, null);
 	}
 	
 	
